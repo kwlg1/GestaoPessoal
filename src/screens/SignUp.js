@@ -1,20 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar, Alert } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { useNavigation } from '@react-navigation/native';
-import auth from '../config/firebaseConfig';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 
-export default function Login() {
-    const [email, setEmail] = useState('');
+export default function SignUp() {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
-
-    function doLogin(){
-        signInWithEmailAndPassword(auth, email, password)
-        .catch((error) => {
-            Alert.alert("ERRO", "Email ou senha incorreta")
-        })
-    }
 
     return (
         <View style={styles.container}>
@@ -24,9 +13,9 @@ export default function Login() {
             <View style={styles.form}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
                 />
                 <TextInput
                     style={styles.input}
@@ -38,24 +27,9 @@ export default function Login() {
 
                 <TouchableOpacity
                     style={styles.Btn}
-                    onPress={() => doLogin()}
+                    onPress={() => navigation.navigate('SignUp')}
                 >
                     <Text style={{ color: '#fff' }}>Login</Text>
-                </TouchableOpacity>
-
-                <Text style={styles.Ou}>Ou</Text>
-
-                <TouchableOpacity
-                    style={styles.Btn}
-                >
-                    <Text style={{color: '#fff'}}>Redefinir Senha</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.Btn}
-                    onPress={()=> navigation.navigate('SignUp')}
-                >
-                    <Text style={{color: '#fff'}}>Cadastrar Conta</Text>
                 </TouchableOpacity>
 
             </View>
@@ -101,15 +75,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#11114e',
         width: 300,
         height: 50,
-        borderRadius: 10,
-        marginTop: 5,
-    },
-    Ou: {
-        fontSize: 16    ,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#fff',
-        marginTop: 10,
-        marginBottom: 10,
+        borderRadius: 10
     }
 });
