@@ -11,6 +11,10 @@ export default function Login() {
 
     function doLogin(){
         signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            setEmail('')
+            setPassword('')
+        })
         .catch((error) => {
             Alert.alert("ERRO", "Email ou senha incorreta")
         })
@@ -18,10 +22,10 @@ export default function Login() {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#481658' />
-            <Text style={styles.Titulo}>Acesse sua conta</Text>
+            <StatusBar backgroundColor='#9059a1' />
 
             <View style={styles.form}>
+                <Text style={styles.Titulo}>Acesse sua conta</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
@@ -69,12 +73,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#481658'
+        backgroundColor: '#9059a1'
     },
     Titulo: {
-        position: 'absolute',
-        top: 200,
-        left: 15,
+        top: -50,
+        left: -15,
         fontSize: 35,
         fontWeight: 'bold',
         color: '#fff'

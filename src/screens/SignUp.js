@@ -1,35 +1,81 @@
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar, Alert } from 'react-native';
+import auth from '../config/firebaseConfig';
 
 export default function SignUp() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [Email, setEmail] = useState('');
+    const [Senha, setSenha] = useState('');
+    const [ConfirmarSenha, setConfirmarSenha] = useState('')
+    const [MostrarSenha, setMostrarSenha] = useState(false)
+
+    function doSignUp(){
+        if(Senha === ConfirmarSenha && Senha !== "" && ConfirmarSenha !== ""){
+            createUserWithEmailAndPassword(auth, Email, Senha)
+            .then((user) => {
+                setEmail('')
+                setPassword('')
+                setConfirmarSenha('')
+                setMostrarSenha(false)
+            })
+            .catch((error) => {
+              if( error.code === 'auth/weak-password'){
+                Alert.alert('Senha', 'sua senha precisar ter, pelo menos, 6 caracteres.')
+              } 
+              if (error.code === 'auth/invalid-email'){
+                Alert.alert('Email', 'Email incorreto!')
+              }
+              if(error.code === 'auth/email-already-in-use' ){
+                Alert.alert('email', 'O endereço de email digitado já está cadastrado!')
+              }
+            })  
+          } else if(Email === "" && Senha === "" && ConfirmarSenha === ""){
+            Alert.alert('Dados não inseridos', 'Você não inseriu os dados, insira os dados e tente novamente!')
+          } else {
+
+            Alert.alert("Erro", "As senhas precisam ser iguais!")
+          }
+    }
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#481658' />
-            <Text style={styles.Titulo}>Acesse sua conta</Text>
+            <StatusBar backgroundColor='#9059a1' />
 
             <View style={styles.form}>
+                <Text style={styles.Titulo}>Acesse sua conta</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Username"
-                    value={username}
-                    onChangeText={setUsername}
+                    placeholder="Email"
+                    value={Email}
+                    onChangeText={setEmail}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Password"
-                    secureTextEntry
-                    value={password}
-                    onChangeText={setPassword}
+                    placeholder="Senha"
+                    secureTextEntry={MostrarSenha}
+                    value={Senha}
+                    onChangeText={setSenha}
+                />
+
+                <TextInput
+                    style={styles.input}
+                    placeholder="Confirmar Senha"
+                    secureTextEntry={MostrarSenha}
+                    value={ConfirmarSenha}
+                    onChangeText={setConfirmarSenha}
                 />
 
                 <TouchableOpacity
-                    style={styles.Btn}
-                    onPress={() => navigation.navigate('SignUp')}
+                    onPress={() => setMostrarSenha(!MostrarSenha)}
                 >
-                    <Text style={{ color: '#fff' }}>Login</Text>
+                    <Text style={styles.MostrarSenha}>Mostrar Senha</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.Btn}
+                    onPress={() => doSignUp()}
+                >
+                    <Text style={{ color: '#fff' }}>Cadastrar</Text>
                 </TouchableOpacity>
 
             </View>
@@ -43,12 +89,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#481658'
+        backgroundColor: '#9059a1'
     },
     Titulo: {
-        position: 'absolute',
-        top: 200,
-        left: 15,
+        top: -50,
+        left: -15,
         fontSize: 35,
         fontWeight: 'bold',
         color: '#fff'
@@ -76,5 +121,12 @@ const styles = StyleSheet.create({
         width: 300,
         height: 50,
         borderRadius: 10
+    },
+    MostrarSenha: {
+        width: 300,
+        color: '#fff',
+        textAlign: 'right',
+        marginTop: -10,
+        marginBottom: 20
     }
 });

@@ -1,4 +1,4 @@
-import { StyleSheet, StatusBar, View  } from "react-native";
+import { StyleSheet, StatusBar, View, Text} from "react-native";
 
 export default function Home(){
 
