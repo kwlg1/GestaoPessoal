@@ -5,7 +5,8 @@ export default function Home(){
     return (
 
         <View style={styles.container}>
-            <Text>Tela Home</Text>
+            <StatusBar backgroundColor='#9059a1' />
+            <Text style={styles.Titulo}>Bem Vindo</Text>
         </View>
     )
 }
@@ -13,8 +14,18 @@ export default function Home(){
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: '#9059a1',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    Titulo: {
+      position: 'absolute',
+      top: 200,
+      fontSize: 40,
+      fontWeight: 'bold',
+      color: '#fff',
+      width: '100%',
+      textAlign: 'left',
+      paddingLeft: 20
     },
 });

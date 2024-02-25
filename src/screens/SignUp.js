@@ -9,6 +9,12 @@ export default function SignUp() {
     const [ConfirmarSenha, setConfirmarSenha] = useState('')
     const [MostrarSenha, setMostrarSenha] = useState(false)
 
+    function CreateChild(){
+        const user = auth.currentUser
+        const Notes = [
+            {id: Date.now(), nome: '', descricao: ''}
+        ]
+    }
     function doSignUp(){
         if(Senha === ConfirmarSenha && Senha !== "" && ConfirmarSenha !== ""){
             createUserWithEmailAndPassword(auth, Email, Senha)
@@ -17,6 +23,7 @@ export default function SignUp() {
                 setPassword('')
                 setConfirmarSenha('')
                 setMostrarSenha(false)
+                CreateChild()
             })
             .catch((error) => {
               if( error.code === 'auth/weak-password'){

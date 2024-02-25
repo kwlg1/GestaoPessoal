@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar, Alert } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native';
 import auth from '../config/firebaseConfig';
 
@@ -18,6 +18,22 @@ export default function Login() {
         .catch((error) => {
             Alert.alert("ERRO", "Email ou senha incorreta")
         })
+    }
+
+    function doResetPassword(){       
+        if(email === ''){
+            Alert.alert("ERRO", "Digite seu email")
+        } else {
+            sendPasswordResetEmail(auth, email)
+            .then(() => {
+                Alert.alert("SUCESSO", "Email enviado com sucesso")
+            })
+            .catch((error) => {
+                if(error.code){
+                    Alert.alert('ERRO', 'Email não cadastrado')
+                }
+            })
+        }
     }
 
     return (
@@ -51,6 +67,7 @@ export default function Login() {
 
                 <TouchableOpacity
                     style={styles.Btn}
+                    onPress={() => doResetPassword()}
                 >
                     <Text style={{color: '#fff'}}>Redefinir Senha</Text>
                 </TouchableOpacity>
