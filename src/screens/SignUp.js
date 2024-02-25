@@ -1,29 +1,31 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar, Alert } from 'react-native';
-import auth from '../config/firebaseConfig';
+import firebase from '../config/firebaseConfig'
+
 
 export default function SignUp() {
     const [Email, setEmail] = useState('');
     const [Senha, setSenha] = useState('');
     const [ConfirmarSenha, setConfirmarSenha] = useState('')
-    const [MostrarSenha, setMostrarSenha] = useState(false)
+    const [MostrarSenha, setMostrarSenha] = useState(true)
 
-    function CreateChild(){
-        const user = auth.currentUser
-        const Notes = [
-            {id: Date.now(), nome: '', descricao: ''}
-        ]
+    async function CreateChild(){
+        const user = firebase.auth().currentUser
+        const Dados = {nome: user.email, valor: 0}
+
+        firebase.database().ref("User").child(user.uid)
+        firebase.database().ref("User/"+user.uid).set(Dados)
+
     }
     function doSignUp(){
         if(Senha === ConfirmarSenha && Senha !== "" && ConfirmarSenha !== ""){
-            createUserWithEmailAndPassword(auth, Email, Senha)
+            firebase.auth().createUserWithEmailAndPassword(Email, Senha)
             .then((user) => {
+                CreateChild()
                 setEmail('')
                 setPassword('')
                 setConfirmarSenha('')
                 setMostrarSenha(false)
-                CreateChild()
             })
             .catch((error) => {
               if( error.code === 'auth/weak-password'){
@@ -49,7 +51,7 @@ export default function SignUp() {
             <StatusBar backgroundColor='#9059a1' />
 
             <View style={styles.form}>
-                <Text style={styles.Titulo}>Acesse sua conta</Text>
+                <Text style={styles.Titulo}>Cadastre sua conta</Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
@@ -77,6 +79,7 @@ export default function SignUp() {
                 >
                     <Text style={styles.MostrarSenha}>Mostrar Senha</Text>
                 </TouchableOpacity>
+
 
                 <TouchableOpacity
                     style={styles.Btn}

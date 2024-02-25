@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "NoteBlock",
-    "slug": "NoteBlock",
+    "name": "Gestão",
+    "slug": "Gestão",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

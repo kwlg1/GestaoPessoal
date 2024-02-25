@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, StatusBar, Alert } from 'react-native';
-import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth'
 import { useNavigation } from '@react-navigation/native';
-import auth from '../config/firebaseConfig';
+import firebase from '../config/firebaseConfig'
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [MostrarSenha, setMostrarSenha] = useState(true);
     const navigation = useNavigation();
 
     function doLogin(){
-        signInWithEmailAndPassword(auth, email, password)
+        firebase.auth().signInWithEmailAndPassword(email, password)
         .then(() => {
             setEmail('')
             setPassword('')
@@ -24,7 +24,7 @@ export default function Login() {
         if(email === ''){
             Alert.alert("ERRO", "Digite seu email")
         } else {
-            sendPasswordResetEmail(auth, email)
+            firebase.auth().sendPasswordResetEmail(email)
             .then(() => {
                 Alert.alert("SUCESSO", "Email enviado com sucesso")
             })
@@ -51,10 +51,16 @@ export default function Login() {
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
-                    secureTextEntry
+                    secureTextEntry={MostrarSenha}
                     value={password}
                     onChangeText={setPassword}
                 />
+                
+                <TouchableOpacity
+                    onPress={() => setMostrarSenha(!MostrarSenha)}
+                >
+                    <Text style={styles.MostrarSenha}>Mostrar Senha</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.Btn}
@@ -93,7 +99,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#9059a1'
     },
     Titulo: {
-        top: -50,
+        top: -40,
         left: -15,
         fontSize: 35,
         fontWeight: 'bold',
@@ -102,7 +108,7 @@ const styles = StyleSheet.create({
     },
     form: {
         position: 'absolute',
-        bottom: 40, 
+        bottom: 20, 
     },
     input: {
         width: 300,
@@ -131,5 +137,12 @@ const styles = StyleSheet.create({
         color: '#fff',
         marginTop: 10,
         marginBottom: 10,
+    },
+    MostrarSenha: {
+        width: 300,
+        color: '#fff',
+        textAlign: 'right',
+        marginTop: -10,
+        marginBottom: 15
     }
 });
