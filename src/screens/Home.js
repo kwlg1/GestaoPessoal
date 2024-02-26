@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, StatusBar, View, Text, TouchableOpacity, TextInput } from "react-native";
+import { StyleSheet, StatusBar, View, Text, TouchableOpacity, TextInput, Alert} from "react-native";
+import { Ionicons } from 'react-native-vector-icons'
 import firebase from '../config/firebaseConfig'
 
 export default function Home() {
@@ -19,11 +20,26 @@ export default function Home() {
 
   }, [])
 
+  function SignOut() {
+    Alert.alert('Sair', 'Você deseja mesmo fazer sair da sua conta?', [
+      {
+        text: 'Não',
+      },
+      {
+        text: 'Sim',
+        onPress: () => {
+          firebase.auth().signOut()
+        }
+      }
+    ])
+
+  }
+
   function Modificar(op){
 
     const user = firebase.auth().currentUser
     const value = {nome: Dados.nome, valor: op==='+'? Dados.valor + Number(Valor): Dados.valor - Number(Valor)}
-
+    setValor('')
     firebase.database().ref("User").child(user.uid)
     firebase.database().ref("User/"+user.uid).set(value)
   }
@@ -31,8 +47,11 @@ export default function Home() {
 
     <View style={styles.container}>
       <StatusBar backgroundColor='#9059a1' />
+      <TouchableOpacity style={styles.SignOut} onPress={() => SignOut()}>
+        <Ionicons name='exit' size={60} color='#fff' />
+      </TouchableOpacity>
       <Text style={styles.Titulo}>{`${Dados.nome}`}</Text>
-      <Text style={styles.Valor}>{`R$ ${Dados.valor.toFixed(2)}`}</Text>
+      <Text style={styles.Valor}>{`R$ ${Number(Dados.valor).toFixed(2)}`}</Text>
 
       <View style={styles.Box}>
         <TextInput 
@@ -113,5 +132,10 @@ const styles = StyleSheet.create({
     top: 300,
     color: '#fff', 
     fontSize: 30
+  },
+  SignOut: {
+    position: 'absolute',
+    top: 20,
+    left: 20
   }
 });
